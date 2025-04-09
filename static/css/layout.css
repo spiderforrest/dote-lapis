@@ -45,6 +45,7 @@ header {
   z-index: 100;
 
   background-color: var(--bar-color);
+  border-bottom: 3px solid var(--bg-color);
 }
 
 header img {
@@ -97,7 +98,7 @@ content * {
   border-radius: 20px;
 }
 
-content p, content a, content em {
+content p, content a, content em, content span {
   padding: 0px;
 }
 
