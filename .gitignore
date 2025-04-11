@@ -1,6 +1,7 @@
-nginx.conf.compiled
 logs/
 store/
+.rocks/
 *temp/
+*compiled
 *pem
 *pem*
