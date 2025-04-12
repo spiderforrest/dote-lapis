@@ -1,6 +1,5 @@
 local argon2 = require "argon2"
 local ffi = require "ffi"
-local store = require"users.data"
 
 -- {{{ pull in openssl's RAND_bytes
 ffi.cdef([[
