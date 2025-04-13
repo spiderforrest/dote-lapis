@@ -49,22 +49,25 @@ case "$1" in
 
 
   "setup")
-    mkdir $DIR/.temp
+    mkdir "$DIR/.temp"
     echo "dependancies: install openresty, lua 5.1, luarocks, openssl, argon2, postgres, postgres17-contrib
      for dev env: inotify-tools
      for prod env: certbot, screen, and after you config certs, run scripts.sh cert
-Did you do those? Next I'm gonna reinstall the luarocks."
+Did you do those?"
     read
+    echo "Cool, installing the luarocks now. Should I reinstall y/n?"
+    read -r yea
+    if [[ "$yea" == "y" ]]; then rm -r .rocks; fi
 
-    # rm -r .rocks
     # instead of setting this up as a rock, just grab luarocks deps manually, we shouldn't have too many......
     luarocks install lapis --lua-version 5.1 --tree .rocks  # the server
     luarocks install argon2-ffi --lua-version 5.1 --tree .rocks  # award winning password hasher, apperently
 
-    echo "Gonna nuke the db now, yeah?"; read
-
-    luajit -e "require'lapis.db.schema'.drop_table'users'"
-    luajit users/schema.lua
+    echo "Gonna nuke the db now, yeah?"; read -r yea
+    if [[ "$yea" == "y" ]]; then
+      luajit -e "require'lapis.db.schema'.drop_table'users'"
+      luajit users/schema.lua
+    fi
 
     echo "Populate the db with random bullshit?"; read
     # start lapis
@@ -85,21 +88,19 @@ Did you do those? Next I'm gonna reinstall the luarocks."
       # copy your local datafile and restructure json for what's needed for the request
       echo -n "{\"username\":\"$USER\", \"userdata\":" > $DIR/tmp
       cat "$local_datafile" >> $DIR/tmp
-      # echo -n ", \"password\":\"bunger\"" >> $DIR/tmp
-      echo -n "}" >> $DIR/tmp
+      echo -n "}" >> "$DIR/tmp"
       curl -X PUT -H "Content-Type: application/json" -d "@$DIR/tmp" localhost:3000/setdata
-      rm $DIR/tmp
+      rm "$DIR/tmp"
     fi
-
 
     # fix missing uuids from dote-cli
     curl -X POST localhost:3000/test/fixuuids/test
     curl -X POST localhost:3000/test/fixuuids/$USER
 
-
     #shutdown lapis
     sleep 1
     .rocks/bin/lapis term
+
     ;;
   *)
   echo "need \$1 from: watch, prod, cert, setup"
