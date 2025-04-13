@@ -8,13 +8,15 @@ schema.create_table("users", {
    "username VARCHAR(64) NOT NULL UNIQUE",
    "password VARCHAR(256) NOT NULL", -- current pw 244 chars
    "data JSONB", -- ?????? amazingly cursed
-   "settings JSONB",
+   "config JSONB",
    "ctime INT", -- postgres has JSON but not fucking UINT lmao
 })
 
-db.query("CREATE INDEX idxgin ON users USING GIN (data)") -- what
+db.query("CREATE INDEX idxgin ON users USING GIN (data)") -- what.
 
 -- enable fuzzy search
--- TODO:all; pick algos, maybe just use LEVENSHTEIN
+-- levenshtein does not work when your search term is much shorter than the target string
+-- soundex and metaphone are not the kind of searches people want, probably, typing?
+-- db.query("CREATE EXTENSION fuzzystrmatch;")
+-- trigrams might work the best, at least for now
 db.query("CREATE EXTENSION pg_trgm")
-db.query("CREATE EXTENSION fuzzystrmatch;")

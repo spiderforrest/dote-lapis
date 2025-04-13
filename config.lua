@@ -1,8 +1,7 @@
 local config = require"lapis.config"
 
-config("development", {
-  server = "nginx",
-  code_cache = "on",
+config({"development", "setup"}, {
+  code_cache = "off",
   port = 3000,
   num_workers = 2,
   session_name = "sess",
@@ -15,7 +14,6 @@ config("development", {
 })
 
 config("testprod", {
-  server = "nginx",
   code_cache = "on",
   port = 80,
   num_workers = 4,

@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
 # get the project dir and the name directly from the directory name
-DIR=$(dirname "$(realpath "$0")") # a ton of shit will break if there's a space in the dir don't feel like fixing rn
+DIR=$(dirname "$(realpath "$0")")
 NAME=$(basename "$DIR")
 # set lua's paths to use luarocks
 export LUA_PATH="$DIR/.rocks/share/lua/5.1/?.lua;$DIR/.rocks/share/lua/5.1/?/init.lua;;"
 # note ;; is at the front here, so we prefer native libraries-this is primarily for openssl
 export LUA_CPATH=";;$DIR/.rocks/lib/lua/5.1/?.so;"
+cd "$DIR"
 
 
 # do one of the things
@@ -16,7 +17,7 @@ case "$1" in
     trap '.rocks/bin/lapis term; echo -e "\e[33m/// watcher: terminated! ///\e[0m"' INT
 
     # start the server
-    $DIR/.rocks/bin/lapis serve &
+    .rocks/bin/lapis serve &
 
     # watch every file the server doesn't touch for changes
     inotifywait -mre modify --exclude "temp|compiled|logs|store" . |
@@ -48,34 +49,35 @@ case "$1" in
 
 
   "setup")
-    echo "dependancies: install openresty, lua 5.1, luarocks, openssl, argon2, postgres
+    mkdir $DIR/.temp
+    echo "dependancies: install openresty, lua 5.1, luarocks, openssl, argon2, postgres, postgres17-contrib
      for dev env: inotify-tools
      for prod env: certbot, screen, and after you config certs, run scripts.sh cert
 Did you do those? Next I'm gonna reinstall the luarocks."
     read
 
-    # rm -r "$DIR/.rocks"
+    # rm -r .rocks
     # instead of setting this up as a rock, just grab luarocks deps manually, we shouldn't have too many......
-    luarocks install lapis --lua-version 5.1 --tree "$DIR/.rocks"  # the server
-    luarocks install argon2-ffi --lua-version 5.1 --tree "$DIR/.rocks"  # award winning password hasher, apperently
+    luarocks install lapis --lua-version 5.1 --tree .rocks  # the server
+    luarocks install argon2-ffi --lua-version 5.1 --tree .rocks  # award winning password hasher, apperently
 
     echo "Gonna nuke the db now, yeah?"; read
 
     luajit -e "require'lapis.db.schema'.drop_table'users'"
-    luajit "$DIR/users/schema.lua"
+    luajit users/schema.lua
 
     echo "Populate the db with random bullshit?"; read
     # start lapis
-    $DIR/.rocks/bin/lapis serve &
+    .rocks/bin/lapis serve setup &
     sleep 1 # lol
     # make the users
-    curl -v -F username=test -F password=bunger localhost:3000/api/adduser
-    curl -v -F username=emptylist -F password=bunger localhost:3000/api/adduser
-    curl -v -F username=$USER -F password=bunger localhost:3000/api/adduser
+    curl -v -F username=test -F password=bunger localhost:3000/auth/signup
+    curl -v -F username=emptylist -F password=bunger localhost:3000/auth/signup
+    curl -v -F username=$USER -F password=bunger localhost:3000/auth/signup
 
     # populate
-    curl -X POST -H "Content-Type: application/json" -d "@$DIR/testdata/test.json" localhost:3000/api/userdata
-    curl -X POST -H "Content-Type: application/json" -d "@$DIR/testdata/emptylist.json" localhost:3000/api/userdata
+    curl -X PUT -H "Content-Type: application/json" -d "@$DIR/testing/test.json" localhost:3000/setdata
+    curl -X PUT -H "Content-Type: application/json" -d "@$DIR/testing/emptylist.json" localhost:3000/setdata
     # check if '''the dev''' has a local datafile and shove it in
     local_datafile="$HOME/.config/dote/data.json"
     if [[ $USER == "spider" ]];then local_datafile="$HOME/misc/dote.json" ; fi
@@ -85,7 +87,7 @@ Did you do those? Next I'm gonna reinstall the luarocks."
       cat "$local_datafile" >> $DIR/tmp
       # echo -n ", \"password\":\"bunger\"" >> $DIR/tmp
       echo -n "}" >> $DIR/tmp
-      curl -X POST -H "Content-Type: application/json" -d "@$DIR/tmp" localhost:3000/api/userdata
+      curl -X PUT -H "Content-Type: application/json" -d "@$DIR/tmp" localhost:3000/setdata
       rm $DIR/tmp
     fi
 
@@ -97,11 +99,7 @@ Did you do those? Next I'm gonna reinstall the luarocks."
 
     #shutdown lapis
     sleep 1
-    $DIR/.rocks/bin/lapis term
-    ;;
-
-  test)
-    luajit -e "print(require'lapis.util'.to_json(require'lapis.db'.query'SELECT (data)[?] FROM users WHERE username =?', 2, 'spider'))"
+    .rocks/bin/lapis term
     ;;
   *)
   echo "need \$1 from: watch, prod, cert, setup"
