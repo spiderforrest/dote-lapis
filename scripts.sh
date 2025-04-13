@@ -76,11 +76,13 @@ Did you do those?"
     # make the users
     curl -v -F username=test -F password=bunger localhost:3000/auth/signup
     curl -v -F username=emptylist -F password=bunger localhost:3000/auth/signup
+    curl -v -F username=ab -F password=bunger localhost:3000/auth/signup
     curl -v -F username=$USER -F password=bunger localhost:3000/auth/signup
 
     # populate
     curl -X PUT -H "Content-Type: application/json" -d "@$DIR/testing/test.json" localhost:3000/setdata
     curl -X PUT -H "Content-Type: application/json" -d "@$DIR/testing/emptylist.json" localhost:3000/setdata
+    curl -X PUT -H "Content-Type: application/json" -d "@$DIR/testing/ab.json" localhost:3000/setdata
     # check if '''the dev''' has a local datafile and shove it in
     local_datafile="$HOME/.config/dote/data.json"
     if [[ $USER == "spider" ]];then local_datafile="$HOME/misc/dote.json" ; fi
@@ -95,6 +97,7 @@ Did you do those?"
 
     # fix missing uuids from dote-cli
     curl -X POST localhost:3000/test/fixuuids/test
+    curl -X POST localhost:3000/test/fixuuids/ab
     curl -X POST localhost:3000/test/fixuuids/$USER
 
     #shutdown lapis
