@@ -1,0 +1,9 @@
+ <Login>
+ <!-- TODO:; write the file aha -->
+  <!-- <link rel="stylesheet" href="/static/css/auth.css"> -->
+  <form action="/auth/login" method="post">
+    <input name="username"></input>
+    <input name="password" type="password"></input>
+    <button>Log in</button>
+  </form>
+</Login>

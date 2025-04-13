@@ -1,0 +1,12 @@
+<link rel="stylesheet" href="/static/css/home.css">
+
+<section class="title">
+  <h1>Welcome <em><%=user.username%></em>!</h1>
+  <p>...</p>
+</section>
+
+<section>
+  <h1>..</h1>
+  <p>..</p>
+  <img src="favicon.ico">
+</section>

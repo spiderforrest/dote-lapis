@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital@0;1&display=swap" rel="stylesheet">
+    <!-- set the theme via css vars -->
+    <style><% if user and user.config.lightmode then %>
+        /* vars go here idk what a css is allie help :;_;:*/
+      <% else %>
+      :root {
+        /* --bar-color: #40A465; */
+        --bg-color: #254730;
+        --fg-color: white;
+        --bg-dim: #00000040;
+        --bg-bright: #FFFFFF34;
+        --bar-color: var(--bg-dim);
+      }
+      <% end %>
+      </style>
+    <link rel="stylesheet" href="/static/css/layout.css">
+  </head>
+
+  <body>
+    <header>
+      <nav role="navigation" id="primary-nav">
+        <img class="qt" src="/favicon.ico"/>
+        <ul class="navlist">
+          <li><a href=<%= url_for"home"%>>Home</a></li>
+          <% if user then %> <!-- easy way to check if logged in -->
+            <li><a href=<%= url_for"data"%>>Data</a></li>
+            <li><a href=<%= url_for"logout"%>>Log out</a></li>
+          <% else %>
+            <li><a href=<%= url_for"login"%>>Log in</a></li>
+            <li><a href=<%= url_for"signup"%>>Sign up </a></li>
+          <% end %>
+        </ul>
+      </nav>
+    </header>
+
+    <content>
+      <% content_for"inner" %>
+    </content>
+
+    <footer>
+      <a href="https://github.com/spiderforrest/" title="Source code"><p class="ul">src</p></a>
+      <a href="mailto:spider@spiderforrest.com" title="Reach out!"><p>spider@spiderforrest.com</p></a>
+      <p title="Site made by Spider Forrest" class="qt">^_^</p>
+    </footer>
+  </body>
+</html>

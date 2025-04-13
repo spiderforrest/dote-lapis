@@ -1,0 +1,20 @@
+
+content section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+
+  background-color: var(--bg-dim)
+}
+
+content section.title {
+  justify-content: center;
+  align-items: center;
+  margin: 100px;
+  background-color: var(--bg-color);
+}
+
+content section.title p {
+  margin: 0;
+}
