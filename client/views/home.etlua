@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="/static/css/home.css">
 
 <section class="title">
-  <h1>Welcome <em><%=user.username%></em>!</h1>
+  <h1>Welcome<%if user then %> <em><%=user.username%></em><% end %>!</h1>
   <p>...</p>
 </section>
 

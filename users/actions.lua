@@ -4,7 +4,7 @@ local auth = require"users.auth"
 local app = require"app"
 
 local function uuid() -- {{{ generate a uuid, maybe belongs in a util file
- return require'lapis.db'.select"gen_random_uuid()"[1].gen_random_uuid
+  return require'lapis.db'.select"gen_random_uuid()"[1].gen_random_uuid
 end -- }}}
 
 local M = {}
@@ -35,14 +35,14 @@ app:get("login", "/auth/login", function(self) --{{{ get/post to login a user
   return { render = true}
 end)
 app:post("login", "/auth/login", function (self)
-   local user = Users:find{username=self.params.username}
-   if auth.check(user.password, self.params.password) then
-      self.session.uuid = user.uuid
-      -- return {status = 204, render = false}
-      return {redirect_to = self.session.wanted_url or "/"}
+  local user = Users:find{username=self.params.username}
+  if user:verify(self.params.password) then
+    self.session.uuid = user.uuid
+    -- return {status = 204, render = false}
+    return {redirect_to = self.session.wanted_url or "/"}
   else
-    return {status = 403, render = false}
-   end
+    return {"wrong password", status = 403}
+  end
 end) -- }}}
 
 app:match("logout", "/auth/logout", function(self) -- destroy session

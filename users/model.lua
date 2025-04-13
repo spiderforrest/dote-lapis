@@ -1,10 +1,14 @@
 local Model = require"lapis.db.model".Model
 local db = require"lapis.db"
+local argon = require"argon2"
 
 local Users, User_meta = Model:extend("users", {
   primary_key = {"uuid", "username"}
 })
 
+function User_meta:verify(password) --{{{
+  return argon.verify(self.password, password)
+end --}}}
 
 function User_meta:get_item_by_id(id) -- pointless, in practice always use user.data[id]
   return db.select("data[?] FROM users WHERE username = ?", id-1, self.username) -- data is 1-index...
@@ -46,6 +50,7 @@ function User_meta:search_items(phrase, limit) --{{{
   LIMIT ?
   ]],self.username, phrase,  limit)
 end --}}}
+
 
 
 

@@ -22,11 +22,6 @@ function M.hash (pass) -- {{{ hash a password
    return assert(argon2.hash_encoded(pass, salt))
 end --}}}
 
-function M.check (pass, hash) --{{{ check a password against a hash
-   require'util'.print(argon2.verify(hash, pass))
-   return true
-end -- }}}
-
 function M.filter (self) -- {{{ the filter function to authenticate requests
    -- if user has a session, pull their data from the database
    if self.session.uuid then
@@ -35,6 +30,7 @@ function M.filter (self) -- {{{ the filter function to authenticate requests
    end
 
    -- TODO:all; figure out the url paths and update here
+   if string.find(self.req.parsed_url.path, "^/") then return end
    -- if currently authing, just allow
    if string.find(self.req.parsed_url.path, "^/auth") then return end
 
