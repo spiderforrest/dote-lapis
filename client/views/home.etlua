@@ -6,7 +6,9 @@
 </section>
 
 <section>
-  <h1>..</h1>
+<!-- same as above but using the element functions make it, sometimes nicer -->
+ <!-- element("h1", ) -->
+  <h1>Welcome <% if user then element("em", user.username) end %>!</h1>
   <p>..</p>
   <img src="favicon.ico">
 </section>

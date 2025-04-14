@@ -7,12 +7,28 @@ end
 local app = require"app"
 
 -- grab modules
-local auth = require"users.auth"
+local Users = require"users.model"
 local util = require"util"
 
 
 -- this runs code on EVERY route before the action applies, and loads the session data or redirects to login
-app:before_filter(auth.filter)
+app:before_filter(function(self) -- {{{ the filter function to authenticate requests
+   -- if user has a session, pull their data from the database
+   if self.session.uuid then
+      self.user = Users:find{uuid=self.session.uuid}
+      return
+   end
+
+   -- TODO:all; figure out the url paths and update here
+   if string.find(self.req.parsed_url.path, "^/$") then return end
+   -- if currently authing, just allow
+   if string.find(self.req.parsed_url.path, "^/auth") then return end
+
+   -- if no exceptions met, give 'em the ol' one-two
+   self.session.wanted_url = self.req.parsed_url.path
+   self:write({redirect_to = self:url_for"login"})
+end) --}}}
+
 
 -- enable templating
 app.views_prefix = "client.views" -- where we keep etlua files
@@ -28,13 +44,14 @@ app:get("home", "/", function ()
   return { render = true }
 end)
 -- typing function()return{render=true}end annoys me slightly so here's a shorthand
-app:render_get("items", "/items")
+--app:render_get("home", "/")
 
--- you can also pass a callback function, if it returns text it will get rendered inside the layout as html
+-- you can also pass a callback function, if it returns text it will get rendered inside the layout html escaped (gr8 for debugging)
 app:get("/test/uuid", function() return require'lapis.db'.select"gen_random_uuid()"[1].gen_random_uuid end)
 
 -- of course, we do most of the binding in other files
 require"users.actions"
+require"items.actions"
 
 
 

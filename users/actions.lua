@@ -1,11 +1,6 @@
 local util = require"util"
 local Users = require"users.model"
-local auth = require"users.auth"
 local app = require"app"
-
-local function uuid() -- {{{ generate a uuid, maybe belongs in a util file
-  return require'lapis.db'.select"gen_random_uuid()"[1].gen_random_uuid
-end -- }}}
 
 local M = {}
 
@@ -15,24 +10,19 @@ local M = {}
 -- end --}}}
 
 app:render_get("signup", "/auth/signup") -- {{{ get/post create a user
-app:post("signup", "/auth/signup", function(self)
-  local user = Users:create{
-    uuid = util.uuid();
-    username = self.params.username,
-    password = auth.hash(self.params.password),
-    -- does it assume array? does it care? it should switch to an array as soon as data's added.
-    -- Jank Serialized Object Notation
-    items = util.to_json(self.params.useritems or {}),
-    config = util.to_json{},
-    ctime = os.time()
-  }
+app:post("signup", "/auth/signup", function(self) -- is respond_to cleaner? TOO BAD.
+  local user = Users.add(self.params.username, self.params.password, self.params.useritems)
+  -- log them in by setting the uuid
   self.session.uuid = user.uuid
-  return {redirect_to = self.session.wanted_url or "/"}
+  -- redirect them and clear the wanted url
+  local wanted_url = self.session.wanted_url
+  self.session.wanted_url = nil
+  return {redirect_to = wanted_url or "/"}
 end) -- }}}
 
 app:get("login", "/auth/login", function(self) --{{{ get/post to login a user
   if self.session.uuid then -- if already logged in send them on their way
-    return {status = 200, redirect_to = "/"}
+    return {redirect_to = "/"}
   end
   return { render = true}
 end)
@@ -40,21 +30,21 @@ app:post("login", "/auth/login", function (self)
   local user = Users:find{username=self.params.username}
   if user:verify(self.params.password) then
     self.session.uuid = user.uuid
-    -- return {status = 204, render = false}
-    return {redirect_to = self.session.wanted_url or "/"}
+    local wanted_url = self.session.wanted_url
+    self.session.wanted_url = nil
+    return {redirect_to = wanted_url or "/"}
   else
     return {"wrong password", status = 403}
   end
 end) -- }}}
 
 app:match("logout", "/auth/logout", function(self) -- destroy session
-  return({
+  return {
     redirect_to = self:url_for"home",
     headers = {
-      ["Clear-Site-Data"] = '"*"',
+      ["Clear-Site-Data"] = '"cookies"',
     }
-  })
+  }
 end)
-return app
 
 -- vim:foldmethod=marker

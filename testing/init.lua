@@ -1,7 +1,6 @@
 local app = require 'app' -- files that use app must return it for class inhertance reasons (despite me not using the class system)
 
 local Users = require"users.model"
-local auth = require"users.auth"
 local util = require'util'
 local json_params = require"lapis.application".json_params
 
@@ -9,7 +8,7 @@ local function add_user (self) -- {{{
   Users:create{
     uuid = util.uuid();
     username = self.params.username,
-    password = auth.hash(self.params.password),
+    password = util.crypto.hash(self.params.password),
     -- does it assume array? does it care? it should switch to an array as soon as items's added.
     -- Jank Serialized Object Notation
     items = util.to_json(self.params.useritems or {}),

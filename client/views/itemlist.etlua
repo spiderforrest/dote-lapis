@@ -1,0 +1,17 @@
+<Itemlist>
+  <!-- render items is just the list of items for this to render -->
+  <% for i,id in ipairs(render_items) do %>
+    <% local item = user.items[id] %>
+
+    <!-- create a div for each item -->
+    <div class="item">
+      <!-- this is an all lua block using element() to make elements,
+      so we don't have to switch back and forth from html/lua a bunch -->
+      <%
+        element("h6", id)
+        element("h4", item.title)
+        if item.body then element("p", item.body) end
+      %>
+    </div>
+  <% end %>
+</Itemlist>
