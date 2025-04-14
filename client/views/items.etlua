@@ -1,0 +1,3 @@
+<Items>
+  <%=require"util".to_json(user.items)%>
+</Items>

@@ -7,12 +7,12 @@ schema.create_table("users", {
    "uuid UUID PRIMARY KEY",
    "username VARCHAR(64) NOT NULL UNIQUE",
    "password VARCHAR(256) NOT NULL", -- current pw 244 chars
-   "data JSONB", -- ?????? amazingly cursed
+   "items JSONB", -- ?????? amazingly cursed
    "config JSONB",
    "ctime INT", -- postgres has JSON but not fucking UINT lmao
 })
 
-db.query("CREATE INDEX idxgin ON users USING GIN (data)") -- what.
+db.query("CREATE INDEX idxgin ON users USING GIN (items)") -- what.
 
 -- enable fuzzy search
 -- levenshtein does not work when your search term is much shorter than the target string

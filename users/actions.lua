@@ -16,15 +16,17 @@ local M = {}
 
 app:render_get("signup", "/auth/signup") -- {{{ get/post create a user
 app:post("signup", "/auth/signup", function(self)
-  Users:create({
+  local user = Users:create{
     uuid = util.uuid();
     username = self.params.username,
     password = auth.hash(self.params.password),
     -- does it assume array? does it care? it should switch to an array as soon as data's added.
     -- Jank Serialized Object Notation
-    data = util.to_json(self.params.userdata or {}),
-    config = util.to_json{}
-  })
+    items = util.to_json(self.params.useritems or {}),
+    config = util.to_json{},
+    ctime = os.time()
+  }
+  self.session.uuid = user.uuid
   return {redirect_to = self.session.wanted_url or "/"}
 end) -- }}}
 

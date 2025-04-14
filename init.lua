@@ -20,7 +20,7 @@ app:enable"etlua" -- let us access them
 app.layout = "layout" -- set the layout wrapper for every page
 
 
--- this function handles json requests, see /api/userdata for usage
+-- this function handles json requests, see /api/useritems for usage
 local json_params = require"lapis.application".json_params
 
 -- render and serve the etlua view "home.etlua"(from client/views/) inside the layout wrapper on /
@@ -28,7 +28,7 @@ app:get("home", "/", function ()
   return { render = true }
 end)
 -- typing function()return{render=true}end annoys me slightly so here's a shorthand
-app:render_get("data", "/data")
+app:render_get("items", "/items")
 
 -- you can also pass a callback function, if it returns text it will get rendered inside the layout as html
 app:get("/test/uuid", function() return require'lapis.db'.select"gen_random_uuid()"[1].gen_random_uuid end)
@@ -41,13 +41,13 @@ require"users.actions"
 
 
 -- this is testing setup junk i will delete eventually
--- app:get("/api/userdata/:username", users.get_data)
+-- app:get("/api/useritems/:username", users.get_items)
 -- app:post("/api/adduser", users.add_user)
--- app:post("/api/userdata", json_params(users.set_data))
+-- app:post("/api/useritems", json_params(users.set_items))
 
--- app:get("/api/userdata/:username/:id", function(self) return users.get_by_id(self) end)
--- app:get("/api/userdata/:username/:item_uuid", function(self) return users.get_by_uuid(self) end)
--- app:get("/api/userdata/:username/:phrase", function(self) return users.get_by_uuid(self) end)
+-- app:get("/api/useritems/:username/:id", function(self) return users.get_by_id(self) end)
+-- app:get("/api/useritems/:username/:item_uuid", function(self) return users.get_by_uuid(self) end)
+-- app:get("/api/useritems/:username/:phrase", function(self) return users.get_by_uuid(self) end)
 
 
 -- return lapis your created app with routes etc

@@ -1,3 +1,0 @@
-<Data>
-  <%=require"util".to_json(user.data)%>
-</Data>

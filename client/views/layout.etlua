@@ -32,7 +32,7 @@
         <ul class="navlist">
           <li><a href=<%= url_for"home"%>>Home</a></li>
           <% if user then %> <!-- easy way to check if logged in -->
-            <li><a href=<%= url_for"data"%>>Data</a></li>
+            <li><a href=<%= url_for"items"%>>Items (raw)</a></li>
             <li><a href=<%= url_for"logout"%>>Log out</a></li>
           <% else %>
             <li><a href=<%= url_for"login"%>>Log in</a></li>

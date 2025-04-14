@@ -6,21 +6,22 @@ local util = require'util'
 local json_params = require"lapis.application".json_params
 
 local function add_user (self) -- {{{
-  Users:create({
+  Users:create{
     uuid = util.uuid();
     username = self.params.username,
     password = auth.hash(self.params.password),
-    -- does it assume array? does it care? it should switch to an array as soon as data's added.
+    -- does it assume array? does it care? it should switch to an array as soon as items's added.
     -- Jank Serialized Object Notation
-    data = util.to_json(self.params.userdata or {}),
-    config = util.to_json{}
-  })
+    items = util.to_json(self.params.useritems or {}),
+    config = util.to_json{},
+    ctime = os.time()
+  }
   return {status=200, layout=false}
 end -- }}}
 
-local function set_data (self) --{{{
+local function set_items (self) --{{{
   local user = Users:find{username=self.params.username}
-  local ok = user:update{data=util.to_json(self.params.userdata)} -- or this
+  local ok = user:update{items=util.to_json(self.params.useritems), ctime=os.time()} -- or this
   local status
   if ok then status = 200 else status=402 end
   return {status=status, layout=false}
@@ -30,17 +31,17 @@ end --}}}
 -- if this ever needs doing again i can write a single db.query to fix it for every item for every user
 local function fix_uuids (self)
   local user = Users:find{username=self.params.username}
-  for i,v in ipairs(user.data) do
-    user.data[i].uuid = util.uuid()
+  for i,v in ipairs(user.items) do
+    user.items[i].uuid = util.uuid()
   end
-  user.data = util.to_json(user.data)
-  user:update("data")
+  user.items = util.to_json(user.items)
+  user:update("items")
   return {status=status, layout=false}
 end
 --}}}
 
 app:post("/auth/signup", add_user)
-app:put("/setdata", json_params(set_data))
+app:put("/setitems", json_params(set_items))
 app:post("/test/fixuuids/:username", fix_uuids)
 
 

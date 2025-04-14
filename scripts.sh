@@ -51,47 +51,47 @@ case "$1" in
   "setup")
     mkdir "$DIR/.temp"
     echo "dependancies: install openresty, lua 5.1, luarocks, openssl, argon2, postgres, postgres17-contrib
-     for dev env: inotify-tools
-     for prod env: certbot, screen, and after you config certs, run scripts.sh cert
+    for dev env: inotify-tools
+    for prod env: certbot, screen, and after you config certs, run scripts.sh cert
 Did you do those?"
     read
-    echo "Cool, installing the luarocks now. Should I reinstall y/n?"
-    read -r yea
+    echo "Cool, installing the luarocks now. Should I wipe and reinstall y/[n]?"; read -r yea
     if [[ "$yea" == "y" ]]; then rm -r .rocks; fi
 
     # instead of setting this up as a rock, just grab luarocks deps manually, we shouldn't have too many......
     luarocks install lapis --lua-version 5.1 --tree .rocks  # the server
     luarocks install argon2-ffi --lua-version 5.1 --tree .rocks  # award winning password hasher, apperently
 
-    echo "Gonna nuke the db now, yeah?"; read -r yea
+    echo "Gonna nuke the db now, y/[n]?"; read -r yea
     if [[ "$yea" == "y" ]]; then
       luajit -e "require'lapis.db.schema'.drop_table'users'"
       luajit users/schema.lua
     fi
 
-    echo "Populate the db with random bullshit?"; read
-    # start lapis
-    .rocks/bin/lapis serve setup &
-    sleep 1 # lol
-    # make the users
-    curl -v -F username=test -F password=bunger localhost:3000/auth/signup
-    curl -v -F username=emptylist -F password=bunger localhost:3000/auth/signup
-    curl -v -F username=ab -F password=bunger localhost:3000/auth/signup
-    curl -v -F username=$USER -F password=bunger localhost:3000/auth/signup
+    echo "Populate the db with random bullshit? y/[n]"; read -r yea
+    if [[ "$yea" == "y" ]]; then
+      # start lapis
+      .rocks/bin/lapis serve setup &
+      sleep 1 # lol
+      # make the users
+      curl -v -F username=test -F password=bunger localhost:3000/auth/signup
+      curl -v -F username=emptylist -F password=bunger localhost:3000/auth/signup
+      curl -v -F username=ab -F password=bunger localhost:3000/auth/signup
+      curl -v -F username=$USER -F password=bunger localhost:3000/auth/signup
 
     # populate
-    curl -X PUT -H "Content-Type: application/json" -d "@$DIR/testing/test.json" localhost:3000/setdata
-    curl -X PUT -H "Content-Type: application/json" -d "@$DIR/testing/emptylist.json" localhost:3000/setdata
-    curl -X PUT -H "Content-Type: application/json" -d "@$DIR/testing/ab.json" localhost:3000/setdata
+    curl -X PUT -H "Content-Type: application/json" -d "@$DIR/testing/test.json" localhost:3000/setitems
+    curl -X PUT -H "Content-Type: application/json" -d "@$DIR/testing/emptylist.json" localhost:3000/setitems
+    curl -X PUT -H "Content-Type: application/json" -d "@$DIR/testing/ab.json" localhost:3000/setitems
     # check if '''the dev''' has a local datafile and shove it in
     local_datafile="$HOME/.config/dote/data.json"
     if [[ $USER == "spider" ]];then local_datafile="$HOME/misc/dote.json" ; fi
     if [[ -e "$local_datafile" ]] ; then
       # copy your local datafile and restructure json for what's needed for the request
-      echo -n "{\"username\":\"$USER\", \"userdata\":" > $DIR/tmp
+      echo -n "{\"username\":\"$USER\", \"useritems\":" > $DIR/tmp
       cat "$local_datafile" >> $DIR/tmp
       echo -n "}" >> "$DIR/tmp"
-      curl -X PUT -H "Content-Type: application/json" -d "@$DIR/tmp" localhost:3000/setdata
+      curl -X PUT -H "Content-Type: application/json" -d "@$DIR/tmp" localhost:3000/setitems
       rm "$DIR/tmp"
     fi
 
@@ -103,6 +103,7 @@ Did you do those?"
     #shutdown lapis
     sleep 1
     .rocks/bin/lapis term
+    fi
 
     ;;
   *)
