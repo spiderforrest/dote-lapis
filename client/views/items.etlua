@@ -1,5 +1,5 @@
 <Items>
-  <form action="/items" method="post">
+  <form action=<%= url_for"item-search" %> method="get">
     <input name="search"></input>
     <button>Search items</button>
   </form>

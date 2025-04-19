@@ -40,43 +40,51 @@ end --}}}
 -- {{{ queries
 
 function User_meta:get_item_by_uuid(uuid) --{{{ returns id of item with uuid
-  -- query the json via SQL i fucking guess
-  -- postgres' docs for JSON_TABLE are good, if you're trying to parse any of this
-  -- actually this should use JSON_VALUE but this is a good template for more specific queries
   local res = db.query([[
-    SELECT itemstbl.*
-    FROM users,
-    JSON_TABLE(items, '$[*] ? (@.uuid == ?)'  -- $ is items column, [*] is array contents, @.uuid is those contents .uuid
-      COLUMNS(id INT PATH '$.id')             -- just return the id
-    ) as itemstbl                             -- we have to create a table for query
-    WHERE username = ?                        -- i would like to make this run first, checking every user's items first rn is comically bad
-    LIMIT 1]],                                -- JSON_VALUE does this, I'll switch when TODO:spider; nest queries for performance
-    -- ?'s are replaced, and the first needs to get replaced with a literal, unescaped ?. via db.raw.
-    db.raw'?',
-    -- the uuid for a json filter needs to be in double quotes as an identifier, and if you don't wrap
-    -- that in db.raw it'll do '"uuid"'. Both uses of db.raw here are safe.
-    db.raw(db.escape_identifier(uuid)), self.username)
-  -- matches one, so deconstruct
-  return type(res[1].id)
+    SELECT
+      filtered.id
+    FROM (
+      SELECT items
+      FROM users
+      WHERE username = ?
+    ) as itemstbl,                       -- get the target user's items as itemstbl
+
+    JSON_TABLE(items, '$[*]'            -- make a table out of items[*]
+      COLUMNS(
+        id INT PATH '$.id',
+        uuid text PATH '$.uuid' OMIT QUOTES)
+    ) as filtered
+
+    WHERE uuid = ?
+    LIMIT 1
+    ]],
+
+    self.username, uuid)
+  -- fuckin json man
+  return res[1].id
 end --}}}
 
-function User_meta:search_items(phrase, limit) --{{{ search item tiltles by search term and return limit results
+function User_meta:search_items(phrase, limit, offset) --{{{ search item tiltles by search term and return [limit] results, paginate by [offset]
+  limit = limit or 10
+  offset = offset or 0
   local res = db.query([[
     SELECT filtered.id                  -- returns a list like {{id=3},{id=7}}
     FROM (
       SELECT items
       FROM users
-      WHERE username = ?) as itemstbl,  -- get the user's items as itemstbl
+      WHERE username = ?
+    ) as itemstbl,                      -- get the target user's items as itemstbl
 
     JSON_TABLE(items, '$[*]'            -- make a table out of items[*]
       COLUMNS(
         id INT PATH '$.id',
-        title text PATH '$.title')      -- keep the titles for parsing
+        title text PATH '$.title' OMIT QUOTES)      -- keep the titles for parsing
     ) as filtered
 
     ORDER BY similarity(title, ?) DESC  -- order the titles by trigram similarity
     LIMIT ?                             -- limit and you've got your matches
-  ]], self.username, phrase, limit)
+    OFFSET ?                            -- paginate the lazy way
+  ]], self.username, phrase, limit, limit*offset)
 
   return to_ids(res) -- flatten the response list
 end --}}}

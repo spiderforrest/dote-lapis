@@ -1,0 +1,22 @@
+<Itemlist>
+  <ul>
+  <!-- render items is just the list of items for this to render -->
+  <% for i,id in ipairs(render_items) do %>
+    <% local item = user.items[id] %>
+
+    <li class="item" style="display: flex; flex-direction: row;">
+      <!-- this is an all lua block using element() to make elements,
+      so we don't have to switch back and forth from html/lua a bunch -->
+      <%
+        -- a link to a single item by uuid containing a h6 with the item id as text (ft. my janky tmp css breaking link colors)
+        element("a",
+          { href = url_for("item-uuid", {uuid=item.uuid}), style="color:blue;"},
+          function () element("h6", id) end -- sub elements come in callbacks in this syntax, it's not great? but it's fine
+        )
+        element("h4", item.title)
+        if item.body then element("p", item.body) end
+      %>
+    </li>
+  <% end %>
+  </ul>
+</Itemlist>
