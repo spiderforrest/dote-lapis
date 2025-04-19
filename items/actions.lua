@@ -12,7 +12,9 @@ end)
 
 app:get("item-uuid", "/api/items/uuid/:uuid", function(self) --{{{
   local id = self.user:get_item_by_uuid(self.params.uuid)
-  return {json=self.user.items[id]}
+  self.render_items = {id}
+  -- return { render="itemlist" }
+  return { util.to_json(self.user.items[id]) }
 end) --}}}
 
 

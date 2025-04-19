@@ -42,26 +42,17 @@ end --}}}
 function User_meta:get_item_by_uuid(uuid) --{{{ returns id of item with uuid
   local res = db.query([[
     SELECT
-      filtered.id
-    FROM (
-      SELECT items
+      JSON_QUERY(items, '$[*] ? (@.uuid == ?)') -- you should be able to use json_value but it doesn't
+    FROM (                                      -- let you pull a whole item and i can't figure out
+      SELECT items                              -- the correct way to do $[*].id <q mark> $[*].uuid....
       FROM users
       WHERE username = ?
-    ) as itemstbl,                       -- get the target user's items as itemstbl
-
-    JSON_TABLE(items, '$[*]'            -- make a table out of items[*]
-      COLUMNS(
-        id INT PATH '$.id',
-        uuid text PATH '$.uuid' OMIT QUOTES)
-    ) as filtered
-
-    WHERE uuid = ?
+    ) as itemstbl
     LIMIT 1
     ]],
-
-    self.username, uuid)
-  -- fuckin json man
-  return res[1].id
+    db.raw'?', db.raw(db.escape_identifier(uuid)), self.username)
+  -- fuckin json man - dooo i smell a stink?
+  return res[1].json_query.id
 end --}}}
 
 function User_meta:search_items(phrase, limit, offset) --{{{ search item tiltles by search term and return [limit] results, paginate by [offset]
