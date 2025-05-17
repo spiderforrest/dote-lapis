@@ -36,6 +36,33 @@ M.crypto.verify = argon.verify
 --}}}
 
 
+M.tbl = {}
+M.tbl.ensure_present = function(tbl, item) -- {{{ add something to a table, if it's not already there. returns bool if tbl modified
+    -- oh sometimes tbl will be part of a bigger table and nil
+    if not tbl then tbl = {} end
+    -- go thru and check if the thing is in the table
+    for _,v in pairs(tbl) do
+        if v == item then
+            return false
+        end
+    end
+    -- if not, toss er in!
+    table.insert(tbl, item)
+    return true
+end -- }}}
+
+M.tbl.remove = function(tbl, val) -- {{{ remove an item from a table. returns bool if table modified
+   if not tbl then return false end -- quit on nil (like if you do remove(tbl.not_real_tbl))
+    -- go thru and check if the thing is in the table
+    for k,v in pairs(tbl) do
+        if v == val then
+            table.remove(tbl, k)
+            return true
+        end
+    end
+    return false
+end -- }}}
+
 return M
 
 -- vim:foldmethod=marker

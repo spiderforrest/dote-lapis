@@ -7,10 +7,10 @@
     <li class="item" style="display: flex; flex-direction: row;">
 
       <a style="color:blue;" href=<%= url_for("item-uuid", {uuid=item.uuid}) %> >
-        <h6><%=item.id%></h6>
+        <h6><%= item.id %></h6>
       </a>
 
-      <h4><%=item.title%></h4>
+      <h4><%= item.title %></h4>
 
       <% if item.body then %>
         <p><%= item.body %> </p>
