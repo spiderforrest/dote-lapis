@@ -23,6 +23,7 @@
       <% end %>
       </style>
     <link rel="stylesheet" href="/static/css/layout.css">
+    <link rel="stylesheet" href="/static/css/itemcard.css">
   </head>
 
   <body>

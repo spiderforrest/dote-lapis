@@ -1,0 +1,101 @@
+Itemcard {
+  display: block;
+  margin-left: 0.4em;
+  margin-bottom: 0.25em;
+  margin-top: 0.25em;
+  padding-top: 0.15em;
+  padding-bottom: 0.15em;
+}
+
+summary {
+  color: grey;
+  font-style: italic;
+}
+
+.itemcard-topbar {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.15em 0.25em 0.15em 0.25em;
+  border-top: thin solid grey;
+  border-right: thin solid grey;
+  border-left: thin solid grey;
+  border-radius: 0.6em 0.6em 0 0;
+}
+
+.itemcard-topbar > .completioncheckbox {
+  margin-right: 1em;
+}
+
+.itemcard-topbar > p {
+  margin: 0 0 0 0;
+}
+
+.itemcard-topbar > .completioncheckbox {
+  flex: 0 0 auto;
+}
+
+.itemcard-topbar > .titledisplay {
+  flex: 4 0 65%;
+  margin: 0 0 0 0;
+}
+
+.itemcard-topbar > .itemtypedisplay {
+  flex: 0 0 auto;
+}
+
+.itemcard-topbar > .utimedisplay {
+  flex: 0 0 auto;
+}
+
+.itemcard-bodytoggle {
+  border-left: thin solid grey;
+  border-right: thin solid grey;
+  padding: 0.05em 0.25em 0.05em 0.25em;
+}
+
+.itemcard-bodytoggle > .bodytextdisplay {
+  padding: 0.15em 0.25em 0.15em 0.25em;
+}
+
+.itemcard-bottombar {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 0.5em 0 0.5em;
+  border: thin solid grey;
+  border-radius: 0 0 0.6em 0.6em;
+}
+
+.itemcard-bottombar > .duedate-display {
+  flex: 1.5 0 80%;
+  margin: 0;
+}
+
+.itemcard-bottombar > button {
+  height: 1.5em;
+  width: 1.5em;
+  flex: 0 1 4%;
+  border-left: thin solid grey;
+  border-right: thin solid grey;
+  margin-left: 0.2em;
+  margin-right: 0.2em;
+}
+
+.itemcard-bottombar > button > img {
+  height: 1.5em;
+  width: 1.5em;
+}
+
+.itemcard-childrenlist {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.1em 0.1em 0.1em 0.1em;
+  border-bottom-left-radius: 0.6em;
+  border-left: thin dashed grey;
+  border-bottom: thin dashed grey;
+}
