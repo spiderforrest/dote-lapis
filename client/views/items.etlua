@@ -3,5 +3,7 @@
     <input name="search"></input>
     <button>Search items</button>
   </form>
-  <%=require"util".to_json(user.items)%>
+  <% for _, item in ipairs(user.items) do
+    render("client.views.itemcard", {id = item.id, rendered = {}})
+  end %>
 </Items>

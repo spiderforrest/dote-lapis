@@ -1,0 +1,65 @@
+<Itemcard>
+  <% -- setup
+  local item = user.items[id]
+  -- anti recurse
+  rendered[id] = true
+  %>
+
+  <!-- render a top bar -->
+  <section class="itemcard-topbar">
+  <!-- if it's a todo have a checkbox -->
+    <% if item.type == "todo" then %>
+      <input type="checkbox" class="completioncheckbox" />
+    <% end %>
+    <!-- just render basic info -->
+    <h3 class="titledisplay"><%= item.title %></h3>
+    <p class="itemtypedisplay"><%= item.type %> | </p>
+    <p class="utimedisplay"><%= os.date("!", item.ctime) %></p>
+  </section>
+
+  <!-- if there's a body render it inside a folded details -->
+  <% if item.body then %>
+    <details class="itemcard-bodydisplay">
+      <!-- just show the first bit if it is closed -->
+      <summary><%= string.sub(item.body, 1, 50) %>...</summary>
+      <p class="bodytextdisplay"><%= item.body %></p>
+    </details>
+  <% else %>
+    <!-- idk do something better later TODO:allie; -->
+    <p>no body</p>
+  <% end %>
+
+  <!-- render a bar at the bottom -->
+  <section class="itemcard-bottombar">
+    <% if item.due then %>
+      <p><%= os.date("!", item.due) %></p>
+    <% end %>
+
+    <!-- idk maybe someday these will do shit -->
+    <button class="itemcard-addchildbutton" type="button">
+      <img src="https://placecats.com/64/64" alt="Add child item" height=64 width=64 class="addchildicon" />
+    </button>
+    <button class="itemcard-edititembutton" type="button">
+      <img src="https://placecats.com/64/64" alt="Edit this item" height=64 width=64 class="edititemicon" />
+    </button>
+    <button class="itemcard-archiveitembutton" type="button">
+      <img src="https://placecats.com/64/64" alt="Archive item" height=64 width=64 class="archiveitemicon" />
+    </button>
+    <button class="itemcard-moreactionsbutton" type="button">
+      <img src="https://placecats.com/64/64" alt="More actions" height=64 width=64 class="moreactionsbutton" />
+    </button>
+  </section>
+
+  <!-- if the item has kids render them recursively -->
+  <% if #item.children > 0 then %>
+    <details class="itemcard-childrenlist">
+      <summary><%= #item.children %> children</summary>
+      <% for _, child in ipairs(item.children) do
+        -- recursion check
+        if not rendered[child] then
+          render("client.views.itemcard", {id = child, rendered = rendered})
+          end
+        end %>
+    </details>
+  <% end %>
+</Itemcard>
