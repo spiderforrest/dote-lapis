@@ -19,4 +19,4 @@ db.query("CREATE INDEX idxgin ON users USING GIN (items)") -- what.
 -- soundex and metaphone are not the kind of searches people want, probably, typing?
 -- db.query("CREATE EXTENSION fuzzystrmatch;")
 -- trigrams might work the best, at least for now
-db.query("CREATE EXTENSION pg_trgm")
+db.query("CREATE EXTENSION IF NOT EXISTS pg_trgm")

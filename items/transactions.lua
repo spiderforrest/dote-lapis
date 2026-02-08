@@ -12,8 +12,6 @@ function M:create_item (item)
   item.created = os.time()
   item.parents = item.parents or {}
   item.children = item.children or {}
-
-
 end
 
 

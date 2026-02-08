@@ -21,7 +21,6 @@
   <% if item.body then %>
     <details class="itemcard-bodydisplay">
       <!-- just show the first bit if it is closed -->
-      <summary><%= string.sub(item.body, 1, 50) %>...</summary>
       <p class="bodytextdisplay"><%= item.body %></p>
     </details>
   <% else %>

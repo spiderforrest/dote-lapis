@@ -28,6 +28,8 @@ app:get("login", "/auth/login", function(self) --{{{ get/post to login a user
 end)
 app:post("login", "/auth/login", function (self)
   local user = Users:find{username=self.params.username}
+
+  if not user then return {"user not found", status = 406} end
   if user:verify(self.params.password) then
     self.session.uuid = user.uuid
     local wanted_url = self.session.wanted_url
