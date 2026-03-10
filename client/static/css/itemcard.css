@@ -1,18 +1,19 @@
-Itemcard {
+summary {
+  color: grey;
+  font-style: italic;
+}
+
+.itemcard-todo {
   display: block;
   margin-left: 0.4em;
   margin-bottom: 0.25em;
   margin-top: 0.25em;
   padding-top: 0.15em;
   padding-bottom: 0.15em;
+  flex-grow: 1;
 }
 
-summary {
-  color: grey;
-  font-style: italic;
-}
-
-.itemcard-topbar {
+.todo-topbar {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
@@ -21,45 +22,44 @@ summary {
   border-top: thin solid grey;
   border-right: thin solid grey;
   border-left: thin solid grey;
+  border-bottom: thin solid grey;
   border-radius: 0.6em 0.6em 0 0;
 }
 
-.itemcard-topbar > .completioncheckbox {
+.todo-topbar > .completioncheckbox {
   margin-right: 1em;
-}
-
-.itemcard-topbar > p {
-  margin: 0 0 0 0;
-}
-
-.itemcard-topbar > .completioncheckbox {
   flex: 0 0 auto;
 }
 
-.itemcard-topbar > .titledisplay {
+.itemcard-todo-topbar > p {
+  margin: 0 0 0 0;
+}
+
+.todo-topbar > .titledisplay {
   flex: 4 0 65%;
   margin: 0 0 0 0;
 }
 
-.itemcard-topbar > .itemtypedisplay {
+.todo-topbar > .itemtypedisplay {
   flex: 0 0 auto;
 }
 
-.itemcard-topbar > .utimedisplay {
+.todo-topbar > .utimedisplay {
   flex: 0 0 auto;
 }
 
-.itemcard-bodytoggle {
+
+.todo-bodytoggle {
   border-left: thin solid grey;
   border-right: thin solid grey;
   padding: 0.05em 0.25em 0.05em 0.25em;
 }
 
-.itemcard-bodytoggle > .bodytextdisplay {
+.todo-bodytoggle > .bodytextdisplay {
   padding: 0.15em 0.25em 0.15em 0.25em;
 }
 
-.itemcard-bottombar {
+.todo-bottombar {
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-end;
@@ -69,12 +69,12 @@ summary {
   border-radius: 0 0 0.6em 0.6em;
 }
 
-.itemcard-bottombar > .duedate-display {
+.todo-bottombar > .duedate-display {
   flex: 1.5 0 80%;
   margin: 0;
 }
 
-.itemcard-bottombar > button {
+.todo-bottombar > button {
   height: 1.5em;
   width: 1.5em;
   flex: 0 1 4%;
@@ -84,18 +84,39 @@ summary {
   margin-right: 0.2em;
 }
 
-.itemcard-bottombar > button > img {
+.todo-bottombar > button > img {
   height: 1.5em;
   width: 1.5em;
 }
 
-.itemcard-childrenlist {
+.todo-childrenlist {
   display: flex;
   flex-flow: row nowrap;
-  justify-content: space-between;
+  justify-content: start;
   align-items: center;
   padding: 0.1em 0.1em 0.1em 0.1em;
   border-bottom-left-radius: 0.6em;
   border-left: thin dashed grey;
   border-bottom: thin dashed grey;
+}
+
+.itemcard-note {
+  display: block;
+  margin-left: 0.4em;
+  margin-bottom: 0.25em;
+  margin-top: 0.25em;
+  padding-top: 0.15em;
+  padding-bottom: 0.15em;
+  box-shadow: 0.25em 0.25em darkgrey;
+}
+
+.itemcard-tag {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: stretch;
+  gap: 1%;
+  margin-bottom: 0.25%;
+  margin-top: 0.25%;
+  padding-top: 0.15%;
+  padding-bottom: 0.15%;
 }

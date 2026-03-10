@@ -88,7 +88,6 @@ body {
 
 content * {
   padding: 6px;
-  border-radius: 20px;
 }
 
 content p, content a, content em, content span {
