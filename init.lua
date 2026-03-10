@@ -20,7 +20,7 @@ app:before_filter(function(self) -- {{{ the filter function to authenticate requ
    end
 
    -- TODO:all; figure out the url paths and update here
-   if string.find(self.req.parsed_url.path, "^/$") then return end
+   if string.find(self.req.parsed_url.path, "^/$") then return end --allow home unauthed
    -- if currently authing, just allow
    if string.find(self.req.parsed_url.path, "^/auth") then return end
 
@@ -52,19 +52,7 @@ app:get("/test/uuid", function() return require'lapis.db'.select"gen_random_uuid
 -- of course, we do most of the binding in other files
 require"users.actions"
 require"items.actions"
-
-
-
-
-
--- this is testing setup junk i will delete eventually
--- app:get("/api/useritems/:username", users.get_items)
--- app:post("/api/adduser", users.add_user)
--- app:post("/api/useritems", json_params(users.set_items))
-
--- app:get("/api/useritems/:username/:id", function(self) return users.get_by_id(self) end)
--- app:get("/api/useritems/:username/:item_uuid", function(self) return users.get_by_uuid(self) end)
--- app:get("/api/useritems/:username/:phrase", function(self) return users.get_by_uuid(self) end)
+require"items.transactions"
 
 
 -- return lapis your created app with routes etc

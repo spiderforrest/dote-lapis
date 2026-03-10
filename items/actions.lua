@@ -9,6 +9,9 @@ app:get("item-search", "/items/search", function (self)
   return { render="itemlist" }
 end)
 
+app:get("item-json", "/items/json", function (self)
+  return { json=self.user.items }
+end)
 
 app:get("item-uuid", "/api/items/uuid/:uuid", function(self) --{{{
   local id = self.user:get_item_by_uuid(self.params.uuid)
