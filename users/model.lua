@@ -83,27 +83,23 @@ end --}}}
 -- }}}
 
 
--- not implemented here currently; in items/transactions
 
 -- {{{ transactions
 
--- function User_meta:create_item(item)
---   db.query([[
---     SELECT
---     jsonb_insert(itemstbl, ?,
---       jsonb_array_length(itemlist), false)  -- insert before the end of the array
---
---     FROM (SELECT items.*
---           FROM users
---           WHERE username = ?
---           LIMIT 1) as itemstbl              -- only look inside the matched user
---     ]])
--- end
+function User_meta:create_item(item) -- {{{
+  db.query([[
+      UPDATE users
+      SET items = jsonb_insert(
+        items, '{0}', ?
+      )
+      WHERE username = ?
+
+     ]], util.to_json(item), self.username)
+end --}}}
 
 -- }}}
 
 -- {{{ validation
-
 -- }}}
 
 
