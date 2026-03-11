@@ -87,7 +87,6 @@ body {
 }
 
 content * {
-  padding: 6px;
 }
 
 content p, content a, content em, content span {
@@ -99,25 +98,13 @@ content img {
 }
 
 content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-right: 20px;
-  margin-left: 20px;
-  gap: 30px;
+  padding-right: 1em;
+  padding-left: 1em;
   z-index: 1; /* go behind the header, chrome janks without this, thanks google */
 }
 
-content section {
-  max-width: 1180px;
-}
-
-
 /* footer section ========== */
 content { /* technically not the footer but that wrapper is for positioning the footer */
-  margin-bottom: 80px;
-  margin-right: 20px;
-  margin-left: 20px;
 }
 
 footer {

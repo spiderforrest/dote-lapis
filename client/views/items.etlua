@@ -1,3 +1,6 @@
+<link rel="stylesheet" href="/static/css/itemlist.css">
+<link rel="stylesheet" href="/static/css/itemcard.css">
+
 <Items>
   <form action=<%= url_for"item-search" %> method="get">
     <input name="search"></input>

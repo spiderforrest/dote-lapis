@@ -61,14 +61,16 @@ rendered[id] = true
 
     <!-- if the item has children, render them recursively -->
     <% if #item.children > 0 then %>
-      <details class="todo-childrenlist">
+      <details class="todo-childrentoggle">
         <summary><%= #item.children %> children</summary>
-        <% for _, child in ipairs(item.children) do
-          -- recursion check
-          if not rendered[child] then
-            render("client.views.itemcard", {id = child, rendered = rendered})
-            end
-          end %>
+        <div class="todo-childrenlist">
+          <% for _, child in ipairs(item.children) do
+            -- recursion check
+            if not rendered[child] then
+              render("client.views.itemcard", {id = child, rendered = rendered})
+              end
+            end %>
+        </div>
       </details>
     <% end %>
 
