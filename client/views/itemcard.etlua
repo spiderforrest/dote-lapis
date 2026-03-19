@@ -11,13 +11,9 @@ rendered[id] = true
 
   <!-- todo item ================================================== -->
   <% if item.type == "todo" then %>
-    <!-- top bar with title, deadline, itemtype, ctime, and utime -->
+    <!-- top bar with checkbox, title, deadline, itemtype, ctime, and utime -->
     <section class="todo-topbar">
-    <!-- if it's a todo have a checkbox -->
-      <% if item.type == "todo" then %>
-        <input type="checkbox" class="completioncheckbox" />
-      <% end %>
-      <!-- just render basic info -->
+      <input type="checkbox" class="completioncheckbox" />
       <h3 class="titledisplay"><%= item.title %></h3>
       <p class="typedisplay"><%= item.type %> | </p>
       <p class="utimedisplay"><%= os.date("!", item.ctime) %></p>
@@ -27,7 +23,7 @@ rendered[id] = true
     <% if item.body then %>
       <details class="todo-bodytoggle">
         <!-- just show the first 100 chars in summary -->
-        <summary><%= string.sub(item.body, 1, 100)%>...</summary>
+        <summary><%= string.sub(item.body, 1, 300)%>...</summary>
         <p class="bodytextdisplay"><%= item.body %></p>
       </details>
     <% else %>
@@ -77,7 +73,66 @@ rendered[id] = true
   <% end %>
 
   <!-- note item ==================================================== -->
+  <% if item.type == "note" then %>
+    <!-- top bar with title, deadline, itemtype, ctime, and utime -->
+    <section class="note-topbar">
+      <h3 class="titledisplay"><%= item.title %></h3>
+      <p class="typedisplay"><%= item.type %> | </p>
+      <p class="utimedisplay"><%= os.date("!", item.ctime) %></p>
+    </section>
 
+    <!-- if there's a body render it inside a folded details tag if long enough -->
+    <% if item.body then %>
+      <details class="note-bodytoggle">
+        <!-- just show the first 100 chars in summary -->
+        <summary><%= string.sub(item.body, 1, 300)%>...</summary>
+        <p class="bodytextdisplay"><%= item.body %></p>
+      </details>
+    <% else %>
+      <!-- if no body, show button to add one -->
+      <details class="note-bodytoggle">
+        <summary>click to add body data...</summary>
+        <p><em>inline editor for body data will go here</em></p>
+      </details>
+    <% end %>
+
+    <!-- bottom bar with due date on left, addchild/edit/archive/delete/moreactions buttons on right -->
+    <section class="note-bottombar">
+      <% if item.due then %>
+        <p><%= os.date("!", item.due) %></p>
+      <% end %>
+
+      <!-- idk maybe someday these will do shit -->
+      <button class="itemcard-addchildbutton" type="button">
+        <img src="https://placecats.com/64/64" alt="Add child item" height=64 width=64 class="addchildicon" />
+      </button>
+      <button class="itemcard-edititembutton" type="button">
+        <img src="https://placecats.com/64/64" alt="Edit this item" height=64 width=64 class="edititemicon" />
+      </button>
+      <button class="itemcard-archiveitembutton" type="button">
+        <img src="https://placecats.com/64/64" alt="Archive item" height=64 width=64 class="archiveitemicon" />
+      </button>
+      <button class="itemcard-moreactionsbutton" type="button">
+        <img src="https://placecats.com/64/64" alt="More actions" height=64 width=64 class="moreactionsbutton" />
+      </button>
+    </section>
+
+    <!-- if the item has children, render them recursively -->
+    <% if #item.children > 0 then %>
+      <details class="note-childrentoggle">
+        <summary><%= #item.children %> children</summary>
+        <div class="todo-childrenlist">
+          <% for _, child in ipairs(item.children) do
+            -- recursion check
+            if not rendered[child] then
+              render("client.views.itemcard", {id = child, rendered = rendered})
+              end
+            end %>
+        </div>
+      </details>
+    <% end %>
+
+  <% end %>
   <!-- tag item ===================================================== -->
 
 

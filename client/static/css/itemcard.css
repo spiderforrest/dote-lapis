@@ -9,16 +9,14 @@ content {
 
 Itemcard {
   margin: 0 0 0 0;
-  padding: 0 1em 0 1em;
+  padding: 0 0 0 0;
 }
 
 .itemcard-todo {
   display: block;
-  margin-bottom: 0.25em;
-  margin-top: 0.25em;
-  padding-top: 0.15em;
-  padding-bottom: 0.15em;
-  max-width: 100%
+  margin: 0 0 0 0;
+  box-shadow: 0 0 0.5em 0.2em rgb(0 0 0 / 15%);
+  border-radius: 0.6em;
 }
 
 .todo-topbar {
@@ -26,29 +24,28 @@ Itemcard {
   flex-flow: row nowrap;
   justify-content: space-between;
   align-items: center;
-  padding: 0.15em 0.25em 0.15em 0.25em;
-  border-top: thin solid grey;
-  border-right: thin solid grey;
-  border-left: thin solid grey;
+  border-top: 0.2em solid grey;
+  border-right: 0.2em solid grey;
+  border-left: 0.2em solid grey;
   border-radius: 0.6em 0.6em 0 0;
 }
 
 .todo-topbar > .completioncheckbox {
-  margin-right: 1em;
-  flex: 0 0 5%;
+  flex: 0 0 3%;
 }
 
-.itemcard-todo-topbar > p {
+.todo-topbar > p {
   margin: 0 0 0 0;
 }
 
 .todo-topbar > .titledisplay {
+  font-size: 1.5rem;
   flex: 4 0 65%;
   margin: 0 0 0 0;
   overflow-wrap: break-word;
 }
 
-.todo-topbar > .itemtypedisplay {
+.todo-topbar > .typedisplay {
   flex: 0 0 5%;
 }
 
@@ -58,13 +55,14 @@ Itemcard {
 
 
 .todo-bodytoggle {
-  border-left: thin solid grey;
-  border-right: thin solid grey;
-  padding: 0.05em 0.25em 0.05em 0.25em;
+  border-left: 0.2em solid grey;
+  border-right: 0.2em solid grey;
+  padding: 0.1em 0.5em;
 }
 
 .todo-bodytoggle > .bodytextdisplay {
-  padding: 0.15em 0.25em 0.15em 0.25em;
+  padding: 0.15em 0.5em;
+  margin: 0 0 0 0;
 }
 
 .todo-bottombar {
@@ -73,7 +71,10 @@ Itemcard {
   justify-content: flex-end;
   align-items: center;
   padding: 0 0.5em 0 0.5em;
-  border: thin solid grey;
+  border-top: thin solid grey;
+  border-right: 0.2em solid grey;
+  border-left: 0.2em solid grey;
+  border-bottom: 0.2em solid grey;
   border-radius: 0 0 0.6em 0.6em;
 }
 
@@ -85,7 +86,8 @@ Itemcard {
 .todo-bottombar > button {
   height: 1.5em;
   width: 1.5em;
-  flex: 0 1 4%;
+  flex: 0 1 0;
+  margin-left: 0.75em;
   border-left: thin solid grey;
   border-right: thin solid grey;
   padding-left: 0.25em;
@@ -93,14 +95,15 @@ Itemcard {
 }
 
 .todo-bottombar > button > img {
-  height: 1.5em;
-  width: 1.5em;
+  height: 1em;
+  width: 1em;
 }
 
 .todo-childrentoggle {
   border-bottom-left-radius: 0.6em;
-  border-left: thin dashed grey;
-  border-bottom: thin dashed grey;
+  border-left: 0.1em dashed grey;
+  border-bottom: 0.1em dashed grey;
+  padding: 0.15em 0.25em 0.2em;
 }
 
 .todo-childrenlist {
@@ -108,19 +111,105 @@ Itemcard {
   flex-flow: column nowrap;
   justify-content: flex-start;
   align-items: stretch;
+  gap: 0.3em;
   margin: 0 0 0 0;
-  padding: 0 0 0 0;
+  padding: 0 0.3em 0 0.3em;
   border: 0 0 0 0;
 }
 
 .itemcard-note {
   display: block;
-  margin-left: 0.4em;
-  margin-bottom: 0.25em;
-  margin-top: 0.25em;
-  padding-top: 0.15em;
-  padding-bottom: 0.15em;
-  box-shadow: 0.25em 0.25em darkgrey;
+  margin: 0 0 0.5em;
+  box-shadow: 0.5em 0.5em 1px rgb(0 0 0 / 20%);
+}
+
+.note-topbar {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 0.2em solid grey;
+  border-right: 0.2em solid grey;
+  border-left: 0.2em solid grey;
+}
+
+.note-topbar > p {
+  margin: 0 0 0 0;
+}
+
+.note-topbar > .titledisplay {
+  font-size: 1.5rem;
+  flex: 4 0 70%;
+  margin: 0 0 0 0;
+  overflow-wrap: break-word;
+}
+
+.note-topbar > .typedisplay {
+  flex: 0 0 5%;
+}
+
+.note-topbar > .utimedisplay {
+  flex: 0 0 auto;
+}
+
+.note-bodytoggle {
+  border-left: 0.2em solid grey;
+  border-right: 0.2em solid grey;
+  padding: 0.1em 0.5em;
+}
+
+.note-bodytoggle > .bodytextdisplay {
+  padding: 0.15em 0.5em;
+  margin: 0 0 0 0;
+}
+
+.note-bottombar {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 0.5em 0 0.5em;
+  border-top: thin solid grey;
+  border-right: 0.2em solid grey;
+  border-left: 0.2em solid grey;
+  border-bottom: 0.2em solid grey;
+}
+
+.note-bottombar > .duedate-display {
+  flex: 1.5 0 80%;
+  margin: 0;
+}
+
+.note-bottombar > button {
+  height: 1.5em;
+  width: 1.5em;
+  flex: 0 1 0;
+  margin-left: 0.75em;
+  border-left: thin solid grey;
+  border-right: thin solid grey;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+}
+
+.note-bottombar > button > img {
+  height: 1em;
+  width: 1em;
+}
+
+.note-childrentoggle {
+  border-left: 0.1em dashed grey;
+  border-bottom: 0.1em dashed grey;
+  padding: 0.15em 0.25em 0.2em;
+}
+
+.note-childrenlist {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  margin: 0 0 0 0;
+  padding: 0 0.3em 0 0.3em;
+  border: 0 0 0 0;
 }
 
 .itemcard-tag {
