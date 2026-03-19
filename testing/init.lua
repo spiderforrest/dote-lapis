@@ -12,7 +12,7 @@ local function add_user (self) -- {{{
     -- does it assume array? does it care? it should switch to an array as soon as items's added.
     -- Jank Serialized Object Notation
     items = util.to_json(self.params.useritems or {}),
-    config = util.to_json{},
+    config = util.to_json{self.params.config or {}},
     ctime = os.time()
   }
   return {status=200, layout=false}
